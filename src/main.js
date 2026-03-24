@@ -31,23 +31,17 @@ document.querySelector('#app').innerHTML = `
         </div>
       </div>
 
-      <!-- LIVE -->
       <div id="livePage" class="page active">
 
         <div id="transcript" class="terminal">
           <span class="placeholder">Awaiting input...</span>
         </div>
 
-        <!-- 🔥 USE YOUR CSS SYSTEM -->
         <div id="speechOverlay" class="speech-overlay">
           <div id="liveSpeech" class="live-speech"></div>
 
           <div class="audio-bar" id="audioBar">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span><span></span><span></span>
           </div>
         </div>
 
@@ -59,13 +53,11 @@ document.querySelector('#app').innerHTML = `
         </div>
       </div>
 
-      <!-- LOGS -->
       <div id="logsPage" class="page">
         <h3>Session Logs</h3>
         <pre id="logsBox">No logs yet...</pre>
       </div>
 
-      <!-- SETTINGS -->
       <div id="settingsPage" class="page">
         <h3>Settings</h3>
 
@@ -141,7 +133,7 @@ connectWalletBtn.onclick = async () => {
 }
 
 // ============================
-// PAYMENT (UNCHANGED)
+// PAYMENT
 // ============================
 
 const payBtn = document.getElementById("payBtn")
@@ -182,7 +174,6 @@ payBtn.onclick = async () => {
     await connection.confirmTransaction(signature)
 
     sessionActive = true
-
     payBtn.textContent = "Paid ✔"
     startBtn.disabled = false
 
@@ -218,7 +209,6 @@ function setupAudio(stream) {
 
 function animateBars() {
   requestAnimationFrame(animateBars)
-
   analyser.getByteFrequencyData(dataArray)
 
   bars.forEach((bar, i) => {
@@ -239,42 +229,25 @@ const overlay = document.getElementById("speechOverlay")
 async function startSession() {
   transcriptDiv.innerHTML = `<span class="prefix">KATHRA //</span><br>`
 
-  let stream
-
   try {
-    if (inputMode === "mic") {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    }
-
-    if (inputMode === "media") {
-      stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-    }
-
-    if (inputMode === "both") {
-      const mic = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const media = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-
-      const ctx = new AudioContext()
-      const dest = ctx.createMediaStreamDestination()
-
-      ctx.createMediaStreamSource(mic).connect(dest)
-      ctx.createMediaStreamSource(media).connect(dest)
-
-      stream = dest.stream
-    }
-
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
     setupAudio(stream)
-
   } catch {
     alert("Audio capture failed")
   }
 
-  recognition.start()
+  try { recognition.stop() } catch {}
+
+  setTimeout(() => {
+    try { recognition.start() } catch {}
+  }, 200)
 }
 
 // ============================
-// SPEECH (🔥 FIXED CLEAN)
+// SPEECH (FINAL FIX)
 // ============================
+
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
 let recognition = new webkitSpeechRecognition()
 let finalTranscript = ""
@@ -291,7 +264,9 @@ recognition.onstart = () => {
 }
 
 recognition.onend = () => {
-  if (isListening) recognition.start()
+  if (!isMobile && isListening) {
+    try { recognition.start() } catch {}
+  }
 }
 
 recognition.onresult = (e) => {
@@ -303,10 +278,7 @@ recognition.onresult = (e) => {
     if (e.results[i].isFinal) {
       finalTranscript += `[${new Date().toLocaleTimeString()}] ${text}\n`
       liveSpeech.textContent = ""
-
-      // fade out overlay
       setTimeout(() => overlay.classList.remove("active"), 300)
-
     } else {
       interim += text
     }
@@ -314,7 +286,6 @@ recognition.onresult = (e) => {
 
   if (interim) {
     liveSpeech.textContent = interim
-
     overlay.classList.add("active")
 
     clearTimeout(fadeTimer)
@@ -346,7 +317,7 @@ startBtn.onclick = () => {
 
 stopBtn.onclick = () => {
   isListening = false
-  recognition.stop()
+  try { recognition.stop() } catch {}
 
   overlay.classList.remove("active")
 
