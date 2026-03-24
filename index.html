@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- 🔥 MOBILE + VIEWPORT -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- 🔥 TITLE -->
+    <title>KATHRA • AI Transcription</title>
+
+    <!-- 🔥 FAVICON -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- 🔥 PRELOAD FONTS (FASTER LOAD) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- 🔥 SOLANA WEB3 -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+
+    <!-- 🔥 INITIAL LOADER STYLE -->
+    <style>
+      body {
+        margin: 0;
+        background: radial-gradient(circle at 20% 20%, #2a003f, #050505);
+        color: white;
+        font-family: sans-serif;
+      }
+
+      /* 🔥 LOADING SCREEN */
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        background: radial-gradient(circle at center, #1a002a, #000);
+        z-index: 9999;
+      }
+
+      .boot-text {
+        font-size: 14px;
+        opacity: 0.7;
+        margin-top: 10px;
+        letter-spacing: 2px;
+      }
+
+      .boot-loader {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+
+        border: 2px solid rgba(255,255,255,0.1);
+        border-top: 2px solid #c084fc;
+
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- 🔥 BOOT SCREEN -->
+    <div id="boot">
+      <div class="boot-loader"></div>
+      <div class="boot-text">INITIALIZING KATHRA...</div>
+    </div>
+
+    <!-- APP ROOT -->
+    <div id="app"></div>
+
+    <!-- 🔥 REMOVE LOADER AFTER LOAD -->
+    <script>
+      window.addEventListener("load", () => {
+        const boot = document.getElementById("boot");
+        setTimeout(() => {
+          boot.style.opacity = "0";
+          boot.style.transition = "0.4s ease";
+          setTimeout(() => boot.remove(), 500);
+        }, 900);
+      });
+    </script>
+
+    <!-- MAIN APP -->
+    <script type="module" src="/src/main.js"></script>
+
+  </body>
+</html>

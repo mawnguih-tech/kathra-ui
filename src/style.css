@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  color: white;
+  overflow: hidden;
+  background: radial-gradient(circle at 20% 20%, #2a0050, #07070a);
+}
+
+/* GRID */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.12;
+  z-index: -1;
+}
+
+/* BACKGROUND GLOW */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 70% 40%, rgba(236,72,153,0.12), transparent),
+    radial-gradient(circle at 30% 60%, rgba(168,85,247,0.12), transparent);
+  animation: bgFloat 20s ease-in-out infinite alternate;
+  z-index: -2;
+}
+
+@keyframes bgFloat {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(-40px, 30px); }
+}
+
+/* APP */
+.app {
+  display: flex;
+  height: 100vh;
+  position: relative;
+}
+
+/* OVERLAY */
+.app::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(10,0,20,0.95) 0%,
+    rgba(10,0,20,0.7) 40%,
+    rgba(10,0,20,0.25) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  padding: 20px;
+  background: rgba(30, 0, 60, 0.55);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 40px rgba(168,85,247,0.35);
+  z-index: 2;
+}
+
+.sidebar h2 {
+  color: #e879f9;
+  margin-bottom: 20px;
+}
+
+/* NAV */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nav-item {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #bbb;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.nav-item:hover {
+  color: #fff;
+  background: rgba(168,85,247,0.18);
+}
+
+.nav-item.active {
+  color: #fff;
+  background: rgba(168,85,247,0.28);
+  box-shadow: 0 0 14px rgba(168,85,247,0.6);
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* TOPBAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  color: #ccc;
+}
+
+/* STATUS */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #777;
+}
+
+.listening .status-dot {
+  background: #22c55e;
+  box-shadow: 0 0 12px #22c55e;
+}
+
+/* TERMINAL */
+.terminal {
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 0, 35, 0.45),
+    rgba(10, 0, 25, 0.65)
+  );
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(168,85,247,0.28);
+  border-radius: 16px;
+
+  padding: 20px;
+  min-height: 360px;
+
+  font-family: 'JetBrains Mono', monospace;
+  color: #f5eaff;
+
+  box-shadow:
+    0 0 30px rgba(168,85,247,0.18),
+    inset 0 0 20px rgba(168,85,247,0.08);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  transition: 0.25s ease;
+}
+
+.terminal:hover {
+  box-shadow:
+    0 0 60px rgba(168,85,247,0.35),
+    inset 0 0 25px rgba(168,85,247,0.12);
+}
+
+/* CONTROLS */
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+/* BUTTONS */
+button {
+  position: relative;
+  overflow: hidden;
+
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+
+  background: linear-gradient(135deg, #a855f7, #ff2e88);
+  color: white;
+
+  cursor: pointer;
+
+  box-shadow: 0 0 18px rgba(255, 46, 136, 0.45);
+  transition: 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(255, 46, 136, 0.7);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* SPEECH OVERLAY */
+.speech-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 50;
+}
+
+.speech-overlay.active {
+  opacity: 1;
+  background: rgba(10, 0, 20, 0.65);
+}
+
+/* TEXT */
+.live-speech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  text-align: center;
+  max-width: 65%;
+  color: white;
+
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.8),
+    0 0 18px rgba(255,46,136,0.5);
+
+  margin-bottom: 20px;
+}
+
+/* AUDIO BARS */
+.audio-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.audio-bar span {
+  width: 6px;
+  height: 12px;
+
+  background: linear-gradient(180deg, #d946ef, #ff2e88);
+
+  border-radius: 6px;
+
+  box-shadow:
+    0 0 12px rgba(255,46,136,0.8),
+    0 0 20px rgba(168,85,247,0.6);
+
+  transition: height 0.1s linear, opacity 0.1s;
+}
+
+/* LOG BOX */
+#logsBox {
+  background: rgba(20,0,40,0.6);
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* WALLET */
+.wallet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#walletStatus {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* CHARACTER */
+.character-bg {
+  position: fixed;
+  inset: 0;
+
+  background-image: url('/src/assets/bg.png');
+
+  background-size: 72%;
+  background-position: right -40px center;
+  background-repeat: no-repeat;
+
+  opacity: 0.32;
+  filter: brightness(0.9) contrast(1.15);
+
+  z-index: -3;
+  pointer-events: none;
+
+  animation: bgDrift 20s ease-in-out infinite alternate;
+}
+
+.character-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to right,
+    rgba(10,0,20,0.9),
+    rgba(10,0,20,0.6),
+    rgba(10,0,20,0.3),
+    transparent
+  );
+}
+
+@keyframes bgDrift {
+  0%   { transform: scale(1) translateX(0px); }
+  100% { transform: scale(1.02) translateX(-10px); }
+}
