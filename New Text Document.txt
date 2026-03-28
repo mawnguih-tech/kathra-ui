@@ -9,51 +9,31 @@
 
 /* BODY */
 body {
-  font-family: 'Space Grotesk', sans-serif;
-  color: white;
-  
-
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  background: #07070a; /* 🔥 solid base */
-
-  position: relative;
+	font-family: 'Space Grotesk', sans-serif;
+	color: white;
+	overflow: hidden;
+	background: radial-gradient(circle at 20% 20%, #2a0050, #07070a);
 }
 
+/* GRID */
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background: url('/src/assets/bg.png') no-repeat center center;
-  background-size: cover;
-
-  opacity: 0.32;
-
-  transform: translate(var(--bg-x, 0px), var(--bg-y, 0px)) scale(1.02);
-  will-change: transform;
-
-  z-index: -2;
-  pointer-events: none;
+	content: "";
+	position: fixed;
+	inset: 0;
+	background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+	background-size: 50px 50px;
+	opacity: 0.12;
+	z-index: -1;
 }
 
+/* BACKGROUND GLOW */
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background: linear-gradient(
-    to right,
-    rgba(10, 0, 20, 0.95) 0%,
-    rgba(10, 0, 20, 0.75) 35%,
-    rgba(10, 0, 20, 0.4) 60%,
-    rgba(10, 0, 20, 0.2) 80%,
-    transparent 100%
-  );
-
-  z-index: -1;
-  pointer-events: none;
+	content: "";
+	position: fixed;
+	inset: -20%;
+	background: radial-gradient(circle at 70% 40%, rgba(236, 72, 153, 0.12), transparent), radial-gradient(circle at 30% 60%, rgba(168, 85, 247, 0.12), transparent);
+	animation: bgFloat 20s ease-in-out infinite alternate;
+	z-index: -2;
 }
 
 @keyframes bgFloat {
@@ -68,9 +48,19 @@ body::after {
 
 /* APP */
 .app {
-  display: flex;
-  min-height: 100vh; /* 🔥 KEY FIX */
-  position: relative;
+	display: flex;
+	height: 100vh;
+	position: relative;
+}
+
+/* OVERLAY */
+.app::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to right, rgba(10, 0, 20, 0.95) 0%, rgba(10, 0, 20, 0.7) 40%, rgba(10, 0, 20, 0.25) 70%, transparent 100%);
+	pointer-events: none;
+	z-index: 0;
 }
 
 /* SIDEBAR */
@@ -281,6 +271,42 @@ button:active {
 	color: #aaa;
 }
 
+/* CHARACTER */
+.character-bg {
+  position: fixed;
+  inset: 0;
+
+  background-image: url('/src/assets/bg.png');
+  background-repeat: no-repeat;
+
+  background-size: 65% auto;
+  background-position: right center;
+
+  opacity: 0.25;
+
+  filter: brightness(0.9) contrast(1.1);
+
+  z-index: -3;
+  pointer-events: none;
+}
+
+.character-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(10,0,20,0.2) 0%,
+      rgba(10,0,20,0.6) 40%,
+      rgba(10,0,20,0.95) 80%,
+      rgba(10,0,20,1) 100%
+    );
+
+  pointer-events: none;
+}
+
 @keyframes bgDrift {
 	0% {
 		transform: scale(1) translateX(0px);
@@ -422,6 +448,22 @@ section {
 	margin-bottom: 120px;
 }
 
+.landing::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	background-image: url('/src/assets/bg.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	/* 🔥 FIX */
+	background-position: right center;
+	opacity: 0.18;
+	filter: brightness(1.05) contrast(1.1);
+	z-index: -3;
+	pointer-events: none;
+	transition: background-position 0.3s ease;
+}
+
 .cta-mid {
 	margin: 120px 0;
 	text-align: center;
@@ -449,6 +491,19 @@ section {
 body {
 	overflow-x: hidden;
 	overflow-y: auto;
+}
+
+.landing::after {
+	content: "";
+	position: fixed;
+	/* 👈 FIX */
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to bottom, rgba(10, 0, 20, 0.2) 0%, rgba(10, 0, 20, 0.5) 40%, rgba(10, 0, 20, 0.85) 75%, rgba(10, 0, 20, 1) 100%);
+	z-index: -2;
+	pointer-events: none;
 }
 
 .cta-mid button {
@@ -1407,38 +1462,5 @@ body {
     width: 100%;
     justify-content: space-between;
   }
-
-.app .landing::before,
-.app .landing::after {
-  display: none;
-}
-
-.landing {
-  position: relative;
-  z-index: 0;
-}
-
-.app {
-  position: relative;
-  z-index: 1;
-}
-
-body {
-  position: relative;
-  z-index: 0;
-}
-
-@media (min-width: 1400px) {
-  body::before {
-    background-position: 60% center;
-  }
-}
-
-@media (max-width: 900px) {
-  body::before {
-    background-position: center top;
-    background-size: cover;
-  }
-}
 
 }

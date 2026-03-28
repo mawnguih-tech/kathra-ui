@@ -7,6 +7,28 @@ import { createIcons, icons } from 'lucide'
 
 const root = document.querySelector('#app')
 
+let targetX = 0;
+let targetY = 0;
+let currentX = 0;
+let currentY = 0;
+
+document.addEventListener("mousemove", (e) => {
+  targetX = (e.clientX / window.innerWidth - 0.5) * 12;
+  targetY = (e.clientY / window.innerHeight - 0.5) * 12;
+});
+
+function animateParallax() {
+  // smooth interpolation (THIS is the magic)
+  currentX += (targetX - currentX) * 0.08;
+  currentY += (targetY - currentY) * 0.08;
+
+  document.body.style.setProperty('--bg-x', `${currentX}px`);
+  document.body.style.setProperty('--bg-y', `${currentY}px`);
+
+  requestAnimationFrame(animateParallax);
+}
+
+animateParallax();
 // helper: smooth render
 function renderPage(content, afterRender) {
   root.innerHTML = `<div class="page">${content}</div>`

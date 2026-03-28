@@ -2,8 +2,6 @@ export function renderApp() {
   return `
 
   <div class="app">
-     <div class="character-bg"></div>
-
     <div class="sidebar">
       <h2>KATHRA</h2>
       <div class="nav">
