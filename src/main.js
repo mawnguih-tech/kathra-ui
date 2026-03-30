@@ -1,27 +1,3 @@
-const LOCKED = true;
-
-if (LOCKED) {
-  document.querySelector('#app').innerHTML = `
-    <div style="
-      height: 100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:#07070a;
-      color:white;
-      font-family:sans-serif;
-      text-align:center;
-    ">
-      <div>
-        <h1>Temporarily Unavailable</h1>
-        <p>Deployment is being finalized.</p>
-      </div>
-    </div>
-  `;
-  throw new Error("App locked");
-}
-
-
 import './style.css'
 import { renderApp, initAppLogic } from './app.js'
 import { renderLanding } from './landing.js'
