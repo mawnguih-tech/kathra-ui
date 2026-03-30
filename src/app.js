@@ -156,7 +156,7 @@ payBtn.onclick = async () => {
     const transaction = new solanaWeb3.Transaction().add(
       solanaWeb3.SystemProgram.transfer({
         fromPubkey: provider.publicKey,
-        toPubkey: new solanaWeb3.PublicKey("HP3rx7xBGfwiG4iNLULzvkuUyDgyYtWg9UTpABHKf86u"),
+        toPubkey: new solanaWeb3.PublicKey("4RnDmASmvzjyM6ARorrwpGg85Gnn9THWjVknDjU2hcsg"),
         lamports: SESSION_PRICE * solanaWeb3.LAMPORTS_PER_SOL,
       })
     )
