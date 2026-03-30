@@ -7,42 +7,45 @@ import { createIcons, icons } from 'lucide'
 
 const root = document.querySelector('#app')
 
-let targetX = 0;
-let targetY = 0;
-let currentX = 0;
-let currentY = 0;
+/* =========================
+   PARALLAX
+========================= */
+
+let targetX = 0
+let targetY = 0
+let currentX = 0
+let currentY = 0
 
 document.addEventListener("mousemove", (e) => {
-  targetX = (e.clientX / window.innerWidth - 0.5) * 12;
-  targetY = (e.clientY / window.innerHeight - 0.5) * 12;
-});
+  targetX = (e.clientX / window.innerWidth - 0.5) * 8
+  targetY = (e.clientY / window.innerHeight - 0.5) * 8
+})
 
 function animateParallax() {
-  // smooth interpolation (THIS is the magic)
-  currentX += (targetX - currentX) * 0.08;
-  currentY += (targetY - currentY) * 0.08;
+  currentX += (targetX - currentX) * 0.08
+  currentY += (targetY - currentY) * 0.08
 
-  document.body.style.setProperty('--bg-x', `${currentX}px`);
-  document.body.style.setProperty('--bg-y', `${currentY}px`);
+  document.body.style.setProperty('--bg-x', `${currentX}px`)
+  document.body.style.setProperty('--bg-y', `${currentY}px`)
 
-  requestAnimationFrame(animateParallax);
+  requestAnimationFrame(animateParallax)
 }
 
-animateParallax();
-// helper: smooth render
+animateParallax()
+
+/* =========================
+   RENDER SYSTEM (FIXED)
+========================= */
+
 function renderPage(content, afterRender) {
-  root.innerHTML = `<div class="page">${content}</div>`
-
-  const page = document.querySelector('.page')
-
-  requestAnimationFrame(() => {
-    page.classList.add('active')
-
-    if (afterRender) afterRender()
-  })
+  root.innerHTML = content
+  if (afterRender) afterRender()
 }
 
-// landing
+/* =========================
+   ROUTES
+========================= */
+
 function loadLanding(push = true) {
   renderPage(renderLanding(), () => {
     startTerminalAnimation()
@@ -53,7 +56,6 @@ function loadLanding(push = true) {
   if (push) history.pushState({ page: 'landing' }, '', '/')
 }
 
-// app
 function loadApp(push = true) {
   renderPage(renderApp(), () => {
     initAppLogic()
@@ -62,23 +64,40 @@ function loadApp(push = true) {
   if (push) history.pushState({ page: 'app' }, '', '/app')
 }
 
-// initial load
-loadLanding(false)
+/* =========================
+   INITIAL LOAD (FIXED)
+========================= */
 
-// handle back/forward browser
+if (window.location.pathname === "/app") {
+  loadApp(false)
+} else {
+  loadLanding(false)
+}
+
+/* =========================
+   BACK / FORWARD
+========================= */
+
 window.addEventListener('popstate', (e) => {
-  if (e.state?.page === 'app') {
+  if (window.location.pathname === "/app") {
     loadApp(false)
   } else {
     loadLanding(false)
   }
 })
 
-// navigation clicks
+/* =========================
+   NAVIGATION
+========================= */
+
 document.addEventListener('click', (e) => {
 
   if (e.target.id === "enterApp") {
     loadApp()
+  }
+
+  if (e.target.id === "goBack") {
+    loadLanding()
   }
 
   if (e.target.id === "liveDemoBtn") {
@@ -86,11 +105,6 @@ document.addEventListener('click', (e) => {
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' })
     }
-  }
-
-  // 🔥 BACK BUTTON (we add next)
-  if (e.target.id === "goBack") {
-    loadLanding()
   }
 
 })
