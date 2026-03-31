@@ -7,47 +7,64 @@ import { createIcons, icons } from 'lucide'
 
 const root = document.querySelector('#app')
 
-/* =========================
-   PARALLAX
-========================= */
+// 🔒 LOCK FLAG
+const IS_FINALIZED = false // change to true after full payment
 
-let targetX = 0
-let targetY = 0
-let currentX = 0
-let currentY = 0
-
+// parallax
 document.addEventListener("mousemove", (e) => {
-  targetX = (e.clientX / window.innerWidth - 0.5) * 8
-  targetY = (e.clientY / window.innerHeight - 0.5) * 8
+  const x = (e.clientX / window.innerWidth - 0.5) * 10
+  const y = (e.clientY / window.innerHeight - 0.5) * 10
+
+  document.body.style.setProperty('--bg-x', `${x}px`)
+  document.body.style.setProperty('--bg-y', `${y}px`)
 })
 
-function animateParallax() {
-  currentX += (targetX - currentX) * 0.08
-  currentY += (targetY - currentY) * 0.08
-
-  document.body.style.setProperty('--bg-x', `${currentX}px`)
-  document.body.style.setProperty('--bg-y', `${currentY}px`)
-
-  requestAnimationFrame(animateParallax)
-}
-
-animateParallax()
-
-/* =========================
-   RENDER SYSTEM (FIXED)
-========================= */
-
+// helper render
 function renderPage(content, afterRender) {
-  root.innerHTML = content
-  if (afterRender) afterRender()
+  root.innerHTML = `<div class="page">${content}</div>`
+
+  const page = document.querySelector('.page')
+
+  requestAnimationFrame(() => {
+    page.classList.add('active')
+    if (afterRender) afterRender()
+  })
 }
 
-/* =========================
-   ROUTES
-========================= */
+// 🔒 DEPLOYMENT LOCK OVERLAY
+function withLockOverlay(content) {
+  if (IS_FINALIZED) return content
 
+  return `
+    <div style="position:relative">
+      
+      <div style="
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        padding:10px;
+        text-align:center;
+        font-size:13px;
+        background:rgba(255,77,166,0.08);
+        border-bottom:1px solid rgba(255,77,166,0.3);
+        backdrop-filter:blur(6px);
+        z-index:999;
+      ">
+        🚧 Deployment pending finalization
+      </div>
+
+      <div style="opacity:0.6; pointer-events:none;">
+        ${content}
+      </div>
+
+    </div>
+  `
+}
+
+// landing
 function loadLanding(push = true) {
-  renderPage(renderLanding(), () => {
+  renderPage(withLockOverlay(renderLanding()), () => {
     startTerminalAnimation()
     startUsecaseFeed()
     createIcons({ icons })
@@ -56,48 +73,32 @@ function loadLanding(push = true) {
   if (push) history.pushState({ page: 'landing' }, '', '/')
 }
 
+// app
 function loadApp(push = true) {
-  renderPage(renderApp(), () => {
+  renderPage(withLockOverlay(renderApp()), () => {
     initAppLogic()
   })
 
   if (push) history.pushState({ page: 'app' }, '', '/app')
 }
 
-/* =========================
-   INITIAL LOAD (FIXED)
-========================= */
+// initial load
+loadLanding(false)
 
-if (window.location.pathname === "/app") {
-  loadApp(false)
-} else {
-  loadLanding(false)
-}
-
-/* =========================
-   BACK / FORWARD
-========================= */
-
+// browser navigation
 window.addEventListener('popstate', (e) => {
-  if (window.location.pathname === "/app") {
+  if (e.state?.page === 'app') {
     loadApp(false)
   } else {
     loadLanding(false)
   }
 })
 
-/* =========================
-   NAVIGATION
-========================= */
-
+// clicks
 document.addEventListener('click', (e) => {
 
   if (e.target.id === "enterApp") {
     loadApp()
-  }
-
-  if (e.target.id === "goBack") {
-    loadLanding()
   }
 
   if (e.target.id === "liveDemoBtn") {
@@ -105,6 +106,10 @@ document.addEventListener('click', (e) => {
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' })
     }
+  }
+
+  if (e.target.id === "goBack") {
+    loadLanding()
   }
 
 })
