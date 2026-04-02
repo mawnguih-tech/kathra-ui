@@ -8,7 +8,7 @@ import { createIcons, icons } from 'lucide'
 const root = document.querySelector('#app')
 
 // 🔒 LOCK FLAG
-const IS_FINALIZED = false // change to true after full payment
+const IS_FINALIZED = true // change to true after full payment
 
 // parallax
 document.addEventListener("mousemove", (e) => {
