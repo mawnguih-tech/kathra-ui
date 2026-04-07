@@ -209,13 +209,28 @@ export function renderLanding() {
 
         <div class="cta-socials">
 
-          <a href="https://x.com/yourhandle" target="_blank" class="social-btn x-btn">
-            <span>𝕏</span>
-          </a>
+  <a href="https://x.com/AiKathra95026" target="_blank" class="social-item">
+    <div class="social-btn">
+      <span class="icon-text">𝕏</span>
+    </div>
+    <span class="social-label">X</span>
+  </a>
 
-          <a href="https://t.me/yourchannel" target="_blank" class="social-btn tg-btn">
-            <span>✈</span>
-          </a>
+  <a href="https://t.me/kathraai" target="_blank" class="social-item">
+    <div class="social-btn">
+      <span class="icon-text">✈</span>
+    </div>
+    <span class="social-label">Telegram</span>
+  </a>
+
+  <a href="/whitepaper.pdf" target="_blank" class="social-item wp-item">
+    <div class="social-btn wp-btn">
+      <i data-lucide="scroll"></i>
+    </div>
+    <span class="social-label">Whitepaper</span>
+  </a>
+
+</div>
 
         </div>
 

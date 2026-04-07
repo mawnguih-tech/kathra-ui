@@ -1442,3 +1442,97 @@ body {
 }
 
 }
+
+/* ===== WHITEPAPER BUTTON (CLEAN) ===== */
+
+.wp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  overflow: hidden;
+
+  padding: 10px;
+  border-radius: 12px;
+
+  background: rgba(255,255,255,0.1);
+
+   /* makes it slightly bigger than others */
+  transition: all 0.25s ease;
+}
+
+/* icon size (only thing we actually need) */
+.wp-btn i {
+  width: 16px;
+  height: 16px;
+}
+
+/* glow sweep */
+.wp-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.15),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wp-btn:hover::before {
+  opacity: 1;
+}
+
+/* hover effect */
+.wp-btn:hover {
+  transform: translateY(-3px) scale(1.15);
+  box-shadow: 0 0 16px rgba(255,255,255,0.2);
+}
+
+/* fix span icons size */
+.icon-text {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* keep lucide consistent */
+.social-btn i {
+  width: 20px;
+  height: 20px;
+}
+
+/* spacing + alignment */
+.social-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.social-label {
+  font-size: 11px;
+  opacity: 0.7;
+  color: white;
+}
+
+/* hover */
+.social-item:hover .social-btn {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.15);
+}
+
+/* subtle emphasis */
+.wp-item .social-label {
+  opacity: 0.9;
+}
+
+.cta-socials {
+  display: flex;
+  justify-content: center;
+  gap: 28px; /* adjust this for spacing */
+}
