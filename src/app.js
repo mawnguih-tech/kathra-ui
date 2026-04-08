@@ -1,16 +1,19 @@
 export function renderApp() {
   return `
-
   <div class="app">
+
     <div class="sidebar">
       <h2>KATHRA</h2>
       <div class="nav">
-<div class="nav-back" id="goBack">
-  ← <span style="margin-left: 6px;">Return Home</span>
-</div>
+
+        <div class="nav-back" id="goBack">
+          ← <span style="margin-left: 6px;">Return Home</span>
+        </div>
+
         <button class="nav-item active" data-page="live">Live</button>
         <button class="nav-item" data-page="logs">Logs</button>
         <button class="nav-item" data-page="settings">Settings</button>
+
       </div>
     </div>
 
@@ -32,6 +35,7 @@ export function renderApp() {
         </div>
       </div>
 
+      <!-- LIVE -->
       <div id="livePage" class="page active">
 
         <div id="transcript" class="terminal">
@@ -52,32 +56,43 @@ export function renderApp() {
           <button id="stopBtn">Stop</button>
           <button id="exportBtn">Export</button>
         </div>
+
       </div>
 
+      <!-- LOGS -->
       <div id="logsPage" class="page">
-        <h3>Session Logs</h3>
-        <pre id="logsBox">No logs yet...</pre>
-      </div>
-
-      <div id="settingsPage" class="page">
-        <h3>Settings</h3>
-
-        <div class="settings-block">
-          <h4>Input Mode</h4>
-
-          <label><input type="radio" name="mode" value="mic" checked> 🎤 Mic</label><br>
-          <label><input type="radio" name="mode" value="media"> 🖥️ System</label><br>
-          <label><input type="radio" name="mode" value="both"> ⚡ Mic + System</label>
+        <div class="terminal">
+          <h3 style="margin-bottom: 10px;">Session Logs</h3>
+          <pre id="logsBox">No logs yet...</pre>
         </div>
-
       </div>
 
-    </div>
-  </div>
+      <!-- SETTINGS -->
+      <div id="settingsPage" class="page">
+        <div class="terminal">
+          <h3>Settings</h3>
+
+          <div class="settings-block">
+            <h4>Input Mode</h4>
+
+            <label><input type="radio" name="mode" value="mic" checked> 🎤 Mic</label><br>
+            <label><input type="radio" name="mode" value="media"> 🖥️ System</label><br>
+            <label><input type="radio" name="mode" value="both"> ⚡ Mic + System</label>
+          </div>
+
+        </div>
+      </div>
+
+    </div> <!-- ✅ CLOSE .main -->
+
+  </div> <!-- ✅ CLOSE .app -->
   `
 }
 
 export function initAppLogic() {
+
+// 🔥 FEATURE FLAG
+const PAYMENT_REQUIRED = false // ← toggle this later
 
 // ============================
 // NAV
@@ -137,51 +152,60 @@ connectWalletBtn.onclick = async () => {
 const payBtn = document.getElementById("payBtn")
 const startBtn = document.getElementById("startBtn")
 
-let sessionActive = false
+let sessionActive = !PAYMENT_REQUIRED
 let isPaying = false
 const SESSION_PRICE = 0.001
 
-payBtn.onclick = async () => {
-  if (isPaying) return
-  if (!walletConnected) return alert("Connect wallet first.")
+// 🔥 TEST MODE UI
+if (!PAYMENT_REQUIRED) {
+  payBtn.style.display = "none"
+  startBtn.disabled = false
+}
 
-  try {
-    const provider = window.solana
+// 🔥 WRAPPED PAYMENT (UNCHANGED LOGIC)
+if (PAYMENT_REQUIRED) {
+  payBtn.onclick = async () => {
+    if (isPaying) return
+    if (!walletConnected) return alert("Connect wallet first.")
 
-    const connection = new solanaWeb3.Connection(
-      "https://mainnet.helius-rpc.com/?api-key=0c578682-fe6b-4c4b-af1d-d16dc9a1069e",
-      "confirmed"
-    )
+    try {
+      const provider = window.solana
 
-    const transaction = new solanaWeb3.Transaction().add(
-      solanaWeb3.SystemProgram.transfer({
-        fromPubkey: provider.publicKey,
-        toPubkey: new solanaWeb3.PublicKey("4RnDmASmvzjyM6ARorrwpGg85Gnn9THWjVknDjU2hcsg"),
-        lamports: SESSION_PRICE * solanaWeb3.LAMPORTS_PER_SOL,
-      })
-    )
+      const connection = new solanaWeb3.Connection(
+        "https://mainnet.helius-rpc.com/?api-key=0c578682-fe6b-4c4b-af1d-d16dc9a1069e",
+        "confirmed"
+      )
 
-    transaction.feePayer = provider.publicKey
-    transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+      const transaction = new solanaWeb3.Transaction().add(
+        solanaWeb3.SystemProgram.transfer({
+          fromPubkey: provider.publicKey,
+          toPubkey: new solanaWeb3.PublicKey("4RnDmASmvzjyM6ARorrwpGg85Gnn9THWjVknDjU2hcsg"),
+          lamports: SESSION_PRICE * solanaWeb3.LAMPORTS_PER_SOL,
+        })
+      )
 
-    isPaying = true
-    payBtn.textContent = "Processing..."
-    payBtn.disabled = true
+      transaction.feePayer = provider.publicKey
+      transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
 
-    const { signature } = await provider.signAndSendTransaction(transaction)
-    await connection.confirmTransaction(signature)
+      isPaying = true
+      payBtn.textContent = "Processing..."
+      payBtn.disabled = true
 
-    sessionActive = true
-    payBtn.textContent = "Paid ✔"
-    startBtn.disabled = false
+      const { signature } = await provider.signAndSendTransaction(transaction)
+      await connection.confirmTransaction(signature)
 
-  } catch (err) {
-    alert(err.message || "Payment failed")
-    payBtn.textContent = "Pay 0.001 SOL"
-    payBtn.disabled = false
+      sessionActive = true
+      payBtn.textContent = "Paid ✔"
+      startBtn.disabled = false
+
+    } catch (err) {
+      alert(err.message || "Payment failed")
+      payBtn.textContent = "Pay 0.001 SOL"
+      payBtn.disabled = false
+    }
+
+    isPaying = false
   }
-
-  isPaying = false
 }
 
 // ============================
@@ -338,7 +362,9 @@ const statusText = document.getElementById("statusText")
 const statusWrapper = document.getElementById("statusWrapper")
 
 startBtn.onclick = () => {
-  if (!sessionActive) return alert("Pay first.")
+  if (PAYMENT_REQUIRED && !sessionActive) {
+    return alert("Pay first.")
+  }
   startSession()
 }
 

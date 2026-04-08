@@ -13,12 +13,9 @@ const IS_FINALIZED = true // change to true after full payment
 
 // helper render
 function renderPage(content, afterRender) {
-  root.innerHTML = `<div class="page">${content}</div>`
-
-  const page = document.querySelector('.page')
+  root.innerHTML = content
 
   requestAnimationFrame(() => {
-    page.classList.add('active')
     if (afterRender) afterRender()
   })
 }
