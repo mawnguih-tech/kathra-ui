@@ -11,8 +11,8 @@ export function renderLanding() {
           </h1>
 
           <p>
-            Capture live conversations, meetings, and system audio instantly.<br>
-            No setup. Just open and start.
+            Capture real time conversations, meetings, and system audio live.<br>
+            Powered by next-gen speech intelligence.
           </p>
 
           <div class="hero-buttons">
@@ -34,8 +34,8 @@ export function renderLanding() {
             </div>
 
             <div class="tag">
-              <i data-lucide="rocket"></i>
-              <span>Instant Start</span>
+              <i data-lucide="link"></i>
+              <span>Solana Powered</span>
             </div>
 
           </div>
@@ -82,11 +82,11 @@ export function renderLanding() {
         <div class="feature-card">
           <div class="feature-top">
             <div class="feature-icon">
-              <i data-lucide="unlock"></i>
+              <i data-lucide="wallet"></i>
             </div>
-            <h3>No Setup Required</h3>
+            <h3>Pay-As-You-Go</h3>
           </div>
-          <p>Start instantly without accounts, wallets, or payments.</p>
+          <p>Powered by Solana. No subscriptions. Pay per session.</p>
         </div>
 
       </section>
@@ -136,7 +136,7 @@ export function renderLanding() {
               </div>
               <div>
                 <h3>Research & Trading</h3>
-                <p>Track live discussions, spaces, and key signals in real-time.</p>
+                <p>Track live discussions, spaces, and alpha in real-time.</p>
               </div>
             </div>
 
@@ -154,11 +154,11 @@ export function renderLanding() {
               </div>
 
               <div class="data-body">
-                <div class="data-line">[LIVE] Stream → "Market narrative shifting"</div>
-                <div class="data-line">[AI] Transcribing audio...</div>
-                <div class="data-line highlight">→ Keywords detected: "volume", "rotation"</div>
-                <div class="data-line">→ Processing...</div>
-                <div class="data-line success">✓ Output ready</div>
+                <div class="data-line">[LIVE] Twitter Space → "SOL narrative heating up"</div>
+                <div class="data-line">[AI] Transcribing stream...</div>
+                <div class="data-line highlight">→ Keywords detected: "airdrop", "volume", "rotation"</div>
+                <div class="data-line">→ Routing to AI agent...</div>
+                <div class="data-line success">✓ Signal processed</div>
               </div>
 
             </div>
@@ -190,40 +190,47 @@ export function renderLanding() {
             <span>Web Audio API</span>
           </div>
 
+          <div class="tech-item">
+            <img src="/logos/solana.svg" alt="Solana" />
+            <span>Solana Web3</span>
+          </div>
+
         </div>
       </section>
 
-      <!-- CTA -->
+      <!-- FINAL CTA -->
       <section class="cta">
 
-        <h2>Start Using Kathra</h2>
+        <h2>Join the Kathra Network</h2>
 
         <p class="cta-sub">
-          Open the app and begin instantly. No setup required.
+          Get early access, updates, and live signals as we build.
         </p>
 
         <div class="cta-socials">
 
-          <a href="https://x.com/AiKathra95026" target="_blank" class="social-item">
-            <div class="social-btn">
-              <span class="icon-text">𝕏</span>
-            </div>
-            <span class="social-label">X</span>
-          </a>
+  <a href="https://x.com/AiKathra95026" target="_blank" class="social-item">
+    <div class="social-btn">
+      <span class="icon-text">𝕏</span>
+    </div>
+    <span class="social-label">X</span>
+  </a>
 
-          <a href="https://t.me/kathraai" target="_blank" class="social-item">
-            <div class="social-btn">
-              <span class="icon-text">✈</span>
-            </div>
-            <span class="social-label">Telegram</span>
-          </a>
+  <a href="https://t.me/kathraai" target="_blank" class="social-item">
+    <div class="social-btn">
+      <span class="icon-text">✈</span>
+    </div>
+    <span class="social-label">Telegram</span>
+  </a>
 
-          <a href="/whitepaper.pdf" target="_blank" class="social-item wp-item">
-            <div class="social-btn wp-btn">
-              <i data-lucide="scroll"></i>
-            </div>
-            <span class="social-label">Whitepaper</span>
-          </a>
+  <a href="/whitepaper.pdf" target="_blank" class="social-item wp-item">
+    <div class="social-btn wp-btn">
+      <i data-lucide="scroll"></i>
+    </div>
+    <span class="social-label">Whitepaper</span>
+  </a>
+
+</div>
 
         </div>
 
