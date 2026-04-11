@@ -27,9 +27,11 @@ export function renderApp() {
           </div>
         </div>
 
-        <!-- 🔥 WALLET REMOVED -->
         <div class="topbar-right">
-          <span style="opacity:0.6; font-size:13px;">Version 1.0</span>
+          <div class="wallet">
+            <button id="connectWallet">Connect</button>
+            <span id="walletStatus">Not Connected</span>
+          </div>
         </div>
       </div>
 
@@ -49,8 +51,8 @@ export function renderApp() {
         </div>
 
         <div class="controls">
-          <!-- 🔥 PAYMENT BUTTON REMOVED -->
-          <button id="startBtn">Start Session</button>
+          <button id="payBtn">Pay 0.001 SOL</button>
+          <button id="startBtn" disabled>Start Session</button>
           <button id="stopBtn">Stop</button>
           <button id="exportBtn">Export</button>
         </div>
@@ -81,9 +83,9 @@ export function renderApp() {
         </div>
       </div>
 
-    </div>
+    </div> <!-- ✅ CLOSE .main -->
 
-  </div>
+  </div> <!-- ✅ CLOSE .app -->
   `
 }
 
@@ -115,6 +117,96 @@ let inputMode = "mic"
 document.addEventListener("change", (e) => {
   if (e.target.name === "mode") inputMode = e.target.value
 })
+
+// ============================
+// WALLET
+// ============================
+
+const connectWalletBtn = document.getElementById("connectWallet")
+const walletStatus = document.getElementById("walletStatus")
+
+let walletConnected = false
+
+connectWalletBtn.onclick = async () => {
+  try {
+    const provider = window.solana
+    if (!provider || !provider.isPhantom) return alert("Install Phantom")
+
+    const res = await provider.connect()
+    const address = res.publicKey.toString()
+
+    walletConnected = true
+    walletStatus.textContent =
+      "Connected: " + address.slice(0, 4) + "..." + address.slice(-4)
+
+    connectWalletBtn.textContent = "Disconnect"
+  } catch {
+    alert("Wallet connection failed")
+  }
+}
+
+// ============================
+// PAYMENT
+// ============================
+
+const payBtn = document.getElementById("payBtn")
+const startBtn = document.getElementById("startBtn")
+
+let sessionActive = !PAYMENT_REQUIRED
+let isPaying = false
+const SESSION_PRICE = 0.001
+
+// 🔥 TEST MODE UI
+if (!PAYMENT_REQUIRED) {
+  payBtn.style.display = "none"
+  startBtn.disabled = false
+}
+
+// 🔥 WRAPPED PAYMENT (UNCHANGED LOGIC)
+if (PAYMENT_REQUIRED) {
+  payBtn.onclick = async () => {
+    if (isPaying) return
+    if (!walletConnected) return alert("Connect wallet first.")
+
+    try {
+      const provider = window.solana
+
+      const connection = new solanaWeb3.Connection(
+        "https://mainnet.helius-rpc.com/?api-key=0c578682-fe6b-4c4b-af1d-d16dc9a1069e",
+        "confirmed"
+      )
+
+      const transaction = new solanaWeb3.Transaction().add(
+        solanaWeb3.SystemProgram.transfer({
+          fromPubkey: provider.publicKey,
+          toPubkey: new solanaWeb3.PublicKey("4RnDmASmvzjyM6ARorrwpGg85Gnn9THWjVknDjU2hcsg"),
+          lamports: SESSION_PRICE * solanaWeb3.LAMPORTS_PER_SOL,
+        })
+      )
+
+      transaction.feePayer = provider.publicKey
+      transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
+
+      isPaying = true
+      payBtn.textContent = "Processing..."
+      payBtn.disabled = true
+
+      const { signature } = await provider.signAndSendTransaction(transaction)
+      await connection.confirmTransaction(signature)
+
+      sessionActive = true
+      payBtn.textContent = "Paid ✔"
+      startBtn.disabled = false
+
+    } catch (err) {
+      alert(err.message || "Payment failed")
+      payBtn.textContent = "Pay 0.001 SOL"
+      payBtn.disabled = false
+    }
+
+    isPaying = false
+  }
+}
 
 // ============================
 // AUDIO ENGINE
@@ -270,6 +362,9 @@ const statusText = document.getElementById("statusText")
 const statusWrapper = document.getElementById("statusWrapper")
 
 startBtn.onclick = () => {
+  if (PAYMENT_REQUIRED && !sessionActive) {
+    return alert("Pay first.")
+  }
   startSession()
 }
 
